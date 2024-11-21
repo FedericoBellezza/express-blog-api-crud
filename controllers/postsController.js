@@ -28,6 +28,8 @@ const destroy = (req, res) => {
   }
   const postToDeleteIndex = posts.indexOf(postToDelete);
   posts.splice(postToDeleteIndex, 1);
+
+  console.log(posts);
   res.json(posts);
 };
 
