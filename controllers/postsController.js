@@ -1,10 +1,11 @@
 const posts = require("../data/posts");
-const { post } = require("../routers/posts");
+const { post } = require("../routers/postsRouter");
 
 // - index
 function index(req, res) {
   res.json({ text: "Lista dei post", posts });
 }
+
 // - show
 function show(req, res) {
   res.json({
@@ -12,14 +13,43 @@ function show(req, res) {
     post: posts[req.params.id],
   });
 }
+
 // - create
 function create(req, res) {
+  console.log(req.body);
+  const newId = posts.at(-1).id + 1;
+
+  const newPost = {
+    id: newId,
+    title: req.body.title,
+    content: req.body.content,
+    img: req.body.img,
+    tags: req.body.tags,
+  };
+
+  posts.push(newPost);
   res.send("Creazione nuovo post");
 }
+
 // - update
 function update(req, res) {
   res.send("Modifica integrale del post " + req.params.id);
+  const post = posts.find((e) => e.id == req.params.id);
+
+  if (!post) {
+    res.status(404);
+    return res.json({
+      error: "Not Found",
+      message: "Post non trovato",
+    });
+  }
+
+  post.name = req.body.name;
+  post.title = req.body.title;
+  post.content = req.body.content;
+  post.tags = req.body.tags;
 }
+
 // - destroy
 const destroy = (req, res) => {
   const postToDelete = posts.find((e) => e.id == req.params.id);
