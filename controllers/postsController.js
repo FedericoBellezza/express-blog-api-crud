@@ -8,16 +8,33 @@ function index(req, res) {
 
 // - show
 function show(req, res) {
+  const post = posts[req.params.id];
+  if (!post) {
+    res.status(404);
+    return res.json({
+      error: "Not Found",
+      message: "Post non trovato",
+    });
+  }
+
   res.json({
     text: "Dettagli del post " + req.params.id,
-    post: posts[req.params.id],
+    post: post,
   });
 }
 
-// - create
-function create(req, res) {
+// - store
+function store(req, res) {
   console.log(req.body);
   const newId = posts.at(-1).id + 1;
+
+  if (!newId) {
+    res.status(404);
+    return res.json({
+      error: "Not Found",
+      message: "Id non valido",
+    });
+  }
 
   const newPost = {
     id: newId,
@@ -54,7 +71,11 @@ function update(req, res) {
 const destroy = (req, res) => {
   const postToDelete = posts.find((e) => e.id == req.params.id);
   if (!postToDelete) {
-    res.send("Post non trovato");
+    res.status(404);
+    return res.json({
+      error: "Not Found",
+      message: "Post non trovato",
+    });
   }
   const postToDeleteIndex = posts.indexOf(postToDelete);
   posts.splice(postToDeleteIndex, 1);
@@ -63,4 +84,4 @@ const destroy = (req, res) => {
   res.json(posts);
 };
 
-module.exports = { index, show, create, update, destroy };
+module.exports = { index, show, store, update, destroy };
