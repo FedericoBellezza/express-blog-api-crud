@@ -18,8 +18,7 @@ function show(req, res) {
   }
 
   res.json({
-    text: "Dettagli del post " + req.params.id,
-    post: post,
+    post,
   });
 }
 
@@ -44,8 +43,9 @@ function store(req, res) {
     tags: req.body.tags,
   };
 
+  console.log(newPost);
   posts.push(newPost);
-  res.send("Creazione nuovo post");
+  res.json("Creazione nuovo post");
 }
 
 // - update
